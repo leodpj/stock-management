@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+
+# Virtual environment
+venv/
+backend/.env/   # Certifique-se de que o arquivo .env não será commitado
+
+# Django static files
+staticfiles/
+
+# Ignore local database
+*.sqlite3
+
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
+# VSCode/IDE settings
+.vscode/
+.idea/
+
+# Ignore secret keys or credentials files
+backend/.env

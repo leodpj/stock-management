@@ -1,0 +1,35 @@
+/* src/components/ProdutoList.css */
+
+.produto-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .novo-produto-button {
+    background-color: #c7c4ba;;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+    width: 150px;
+  }
+  
+  .novo-produto-button:hover {
+    background-color: #007bff;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  

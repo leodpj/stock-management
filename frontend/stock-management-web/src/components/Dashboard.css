@@ -1,0 +1,100 @@
+/* src/components/Dashboard.css */
+
+/* Estilos gerais para o dashboard */
+.dashboard-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header do dashboard, com logo e boas-vindas */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #007bff;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    width: 100px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .dashboard-header h1 span {
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  /* Estilos do menu de navegação */
+  .dashboard-nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .dashboard-nav ul li {
+    margin: 15px 0;
+  }
+  
+  .dashboard-nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px;
+    padding: 10px 15px;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dashboard-nav ul li a:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* Estilos de responsividade */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 10px;
+    }
+  
+    .dashboard-header {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .dashboard-header h1 {
+      margin: 10px 0;
+      font-size: 20px;
+    }
+  
+    .dashboard-nav ul li a {
+      font-size: 16px;
+    }
+  }
+  
+  /* Estilo do botão de logoff */
+.logoff-button {
+  background-color: #c7c4ba; /* Vermelho */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-left: 20px; /* Ajuste o espaçamento */
+  width: 150px
+}
+
+.logoff-button:hover {
+  background-color: #007bff; /* Tom mais escuro no hover */
+}
