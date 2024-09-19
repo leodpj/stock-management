@@ -26,7 +26,7 @@ class PedidoSerializer(serializers.ModelSerializer):
 class OrcamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orcamento
-        fields = '__all__'
+        fields = '__all__'  # Inclui todos os campos do modelo Orcamento
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
