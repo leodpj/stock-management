@@ -33,3 +33,17 @@
     border-bottom: 1px solid #ccc;
   }
   
+
+  .produto-form-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
+
+#descricao{
+    width: 100%;
+    height: 150px;
+  }

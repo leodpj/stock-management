@@ -11,6 +11,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await api.post('/token/', {
         username: username,
@@ -20,7 +21,9 @@ function Login() {
       // Armazena o token JWT e o nome do usuário no localStorage
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
-      localStorage.setItem('username', response.data.username);  // Armazena o nome do usuário
+      localStorage.setItem('first_name', response.data.first_name);  // Armazena o first_name
+      localStorage.setItem('last_name', response.data.last_name);    // Armazena o last_name
+
       
       // Redireciona para a página inicial
       window.location.href = '/dashboard';

@@ -3,6 +3,7 @@
 from rest_framework import serializers
 from .models import Produto, Entrada, Saida, Pedido, Orcamento
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
@@ -33,6 +34,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
+        # Adicionar first_name e last_name ao token
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+
+        return token
+"""
         # Adiciona campos customizados no payload do token JWT
         token['username'] = user.username
-        return token
+        return token"""

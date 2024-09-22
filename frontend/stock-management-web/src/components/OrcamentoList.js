@@ -5,7 +5,7 @@ import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcion
 import api from '../services/api';
 
 function OrcamentoList() {
-  const [orcamentos, setOrcamentos] = useState([]);
+  const [orcamentos, setOrcamentos] = useState([]);  // Inicializar com um array vazio
   const [cliente, setCliente] = useState('');
   const [validade, setValidade] = useState('');
   const [especificacao, setEspecificacao] = useState('');
@@ -15,24 +15,28 @@ function OrcamentoList() {
   const [status, setStatus] = useState('Pendente');  // Valor padrão para status
   const [message, setMessage] = useState('');
 
-  // Função para buscar orçamentos do backend
+
   useEffect(() => {
     const fetchOrcamentos = async () => {
       try {
-        const token = localStorage.getItem('access_token');  // Recupera o token JWT
+        const token = localStorage.getItem('access_token');
         const response = await api.get('/orcamentos/', {
           headers: {
-            Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
-        setOrcamentos(response.data);
+  
+        console.log('Dados recebidos:', response.data);  // Verificar os dados recebidos
+        setOrcamentos(response.data);  // Verifica se está atribuindo um array
       } catch (error) {
         setMessage('Erro ao carregar os orçamentos.');
+        console.error(error);
       }
     };
-
-    fetchOrcamentos();  // Chama a função para buscar orçamentos ao carregar o componente
+  
+    fetchOrcamentos();
   }, []);
+  
 
   // Função para calcular o valor total automaticamente
   const calcularValorTotal = () => {
@@ -94,7 +98,49 @@ function OrcamentoList() {
     }
   };
 
-  return (
+// Função para imprimir o orçamento
+const handlePrint = (orcamento) => {
+  // Imprime o orçamento abrindo uma nova janela
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Imprimir Orçamento</title>
+    </head>
+    <body>
+      <h1>Orçamento para ${orcamento.cliente}</h1>
+      <p>Descrição: ${orcamento.especificacao}</p>
+      <p>Quantidade: ${orcamento.quantidade}</p>
+      <p>Valor Unitário: R$ ${orcamento.valor_unitario.toFixed(2)}</p>
+      <p>Valor Total: R$ ${orcamento.valor_total.toFixed(2)}</p>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.close();
+};
+
+// Função para enviar o orçamento por email
+const handleEmail = async (orcamento) => {
+  try {
+    const token = localStorage.getItem('access_token');  // Recupera o token JWT
+    const response = await api.post(`/orcamentos/${orcamento.id}/enviar-email/`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    setMessage(`Orçamento enviado por email para ${orcamento.cliente}.`);
+  } catch (error) {
+    setMessage('Erro ao enviar o orçamento por email.');
+  }
+};
+
+
+
+    return (
     <div className="orcamento-container">
       <h1>Gerenciar Orçamentos</h1>
       {message && <p>{message}</p>}
@@ -123,7 +169,7 @@ function OrcamentoList() {
         </div>
         <div className="form-group">
           <label htmlFor="especificacao">Especificação:</label>
-          <input
+          <textarea
             type="text"
             id="especificacao"
             value={especificacao}
@@ -175,16 +221,19 @@ function OrcamentoList() {
       </form>
 
       {/* Lista de orçamentos */}
-      <h2>Orçamentos</h2>
-      <ul>
-        {orcamentos.map((orcamento) => (
-         // <li key={orcamento.id}>
-           // {orcamento.descricao} - R$ {orcamento.valor.toFixed(2)}
-           // <button onClick={() => handleDelete(orcamento.id)}>Excluir</button>
-          //</li>
-          <span></span>
-        ))}
-      </ul>
+        <ul>
+          {Array.isArray(orcamentos) && orcamentos.length > 0 ? (
+            orcamentos.map((orcamento) => (
+              <li key={orcamento.id}>
+                {orcamento.cliente} - R$ {typeof orcamento.valor_total === 'number' ? orcamento.valor_total.toFixed(2) : '0.00'} - {orcamento.status}
+                <button onClick={() => handlePrint(orcamento)}>Imprimir</button>
+                <button onClick={() => handleEmail(orcamento)}>Enviar por Email</button>
+              </li>
+            ))
+          ) : (
+            <p>Nenhum orçamento encontrado.</p>
+          )}
+        </ul>
     </div>
   );
 }

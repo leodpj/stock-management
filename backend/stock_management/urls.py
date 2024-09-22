@@ -11,6 +11,7 @@ router.register(r'saidas', views.SaidaViewSet)
 router.register(r'pedidos', views.PedidoViewSet)
 router.register(r'orcamentos', views.OrcamentoViewSet)
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('inventory.urls')),

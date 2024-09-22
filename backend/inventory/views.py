@@ -4,10 +4,39 @@ from .forms import ProdutoForm, EntradaForm, SaidaForm, PedidoForm, OrcamentoFor
 from rest_framework import viewsets
 from .serializers import ProdutoSerializer, EntradaSerializer, SaidaSerializer, PedidoSerializer, OrcamentoSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomTokenObtainPairSerializer, OrcamentoSerializer
+
+############## NEW EMAIL
+from django.core.mail import send_mail
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Orcamento
+
+class OrcamentoViewSet(viewsets.ModelViewSet):
+    queryset = Orcamento.objects.all()
+    serializer_class = OrcamentoSerializer
+
+    # Custom action to send email
+    @action(detail=True, methods=['post'])
+    def enviar_email(self, request, pk=None):
+        orcamento = self.get_object()
+
+        # Enviar email com os detalhes do orçamento
+        send_mail(
+          f'Orçamento para {orcamento.cliente}',
+          f'Detalhes do orçamento:\n\nEspecificação: {orcamento.especificacao}\nQuantidade: {orcamento.quantidade}\nValor Total: R$ {orcamento.valor_total}',
+          'seuemail@gmail.com',  # Email de origem
+          ['cliente@gmail.com'],  # Email de destino (você pode adicionar o email do cliente aqui)
+          fail_silently=False,
+        )
+
+        return Response({'status': 'email enviado'})
+#########################
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
+   serializer_class = CustomTokenObtainPairSerializer
+
+
 
 def listar_produtos(request):
     produtos = Produto.objects.all()
