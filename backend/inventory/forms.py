@@ -1,5 +1,6 @@
 from django import forms
-from .models import Produto, Entrada, Saida, Pedido, Orcamento
+from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor
+
 
 class ProdutoForm(forms.ModelForm):
     class Meta:
@@ -26,3 +27,14 @@ class OrcamentoForm(forms.ModelForm):
         model = Orcamento
         fields = ['cliente', 'validade', 'especificacao', 'metros_quadrados', 'quantidade', 'valor_unitario', 'valor_total', 'status']
 
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['nome', 'email', 'telefone', 'endereco']
+
+
+class FornecedorForm(forms.ModelForm):
+    class Meta:
+        model = Fornecedor
+        fields = ['razao_social', 'nome_fantasia', 'email', 'telefone', 'cnpj', 'endereco']

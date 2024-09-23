@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaBox, FaArrowRight, FaArrowLeft, FaClipboardList, FaFileInvoiceDollar, FaUsers } from 'react-icons/fa'; // Importando os ícones
 import './Dashboard.css';  // Estilos específicos para o login (opcional)
 
 function Dashboard() {
@@ -32,13 +33,38 @@ return (
       </header>
       <nav className="dashboard-nav">
         <ul>
-          <li><a href="/produtos">Gerenciar Produtos</a></li>
-          <li><a href="/entradas">Registrar Entrada</a></li>
-          <li><a href="/saidas">Registrar Saída</a></li>
-          <li><a href="/pedidos">Gerenciar Pedidos</a></li>
-          <li><a href="/orcamentos">Gerenciar Orçamentos</a></li>
+            <li>
+              <a href="/produtos">
+                <FaBox size={20} />  Gerenciar Produtos
+              </a>
+            </li>
+            <li>
+              <a href="/entradas">
+                <FaArrowRight size={20} /> Registrar Entrada
+              </a>
+            </li>
+            <li>
+              <a href="/saidas">
+                <FaArrowLeft size={20} /> Registrar Saída
+              </a>
+            </li>
+            <li>
+              <a href="/pedidos">
+                <FaClipboardList size={20} /> Gerenciar Pedidos
+              </a>
+            </li>
+            <li>
+              <a href="/orcamentos">
+                <FaFileInvoiceDollar size={20} /> Gerenciar Orçamentos
+              </a>
+            </li>
+            <li>
+              <a href="/clientes">
+                <FaUsers size={20} /> Gerenciar Cliente
+              </a>
+            </li>
         </ul>
-      </nav>
+    </nav>
     </div>
   );
 }

@@ -1,16 +1,24 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Produto, Entrada, Saida, Pedido, Orcamento
-from .forms import ProdutoForm, EntradaForm, SaidaForm, PedidoForm, OrcamentoForm
+from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor
+from .forms import ProdutoForm, EntradaForm, SaidaForm, PedidoForm, OrcamentoForm, ClienteForm
 from rest_framework import viewsets
-from .serializers import ProdutoSerializer, EntradaSerializer, SaidaSerializer, PedidoSerializer, OrcamentoSerializer
+from .serializers import ProdutoSerializer, EntradaSerializer, SaidaSerializer, PedidoSerializer, CustomTokenObtainPairSerializer, OrcamentoSerializer, ClienteSerializer, FornecedorSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer, OrcamentoSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+class OrcamentoList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Lógica para retornar os orçamentos
+        pass
 
 ############## NEW EMAIL
 from django.core.mail import send_mail
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Orcamento
+
 
 class OrcamentoViewSet(viewsets.ModelViewSet):
     queryset = Orcamento.objects.all()
@@ -35,7 +43,6 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
    serializer_class = CustomTokenObtainPairSerializer
-
 
 
 def listar_produtos(request):
@@ -108,6 +115,23 @@ def criar_orcamento(request):
         form = OrcamentoForm()
     return render(request, 'inventory/orcamento_form.html', {'form': form})
 
+
+def listar_clientes(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'inventory/clientes_list.html', {'orcamentos': clientes})
+
+def criar_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_orcamentos')
+    else:
+        form = ClienteForm()
+    return render(request, 'inventory/cliente_form.html', {'form': form})
+
+
+
 # inventory/views.py
 
 class ProdutoViewSet(viewsets.ModelViewSet):
@@ -129,3 +153,11 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class OrcamentoViewSet(viewsets.ModelViewSet):
     queryset = Orcamento.objects.all()
     serializer_class = OrcamentoSerializer
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    queryset = Cliente.objects.all().order_by('-data_criacao')
+    serializer_class = ClienteSerializer
+
+class FornecedorViewSet(viewsets.ModelViewSet):
+    queryset = Fornecedor.objects.all().order_by('-data_criacao')
+    serializer_class = FornecedorSerializer

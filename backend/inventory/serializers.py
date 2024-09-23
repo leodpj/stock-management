@@ -1,7 +1,5 @@
-# inventory/serializers.py
-
 from rest_framework import serializers
-from .models import Produto, Entrada, Saida, Pedido, Orcamento
+from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -25,9 +23,22 @@ class PedidoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrcamentoSerializer(serializers.ModelSerializer):
+    valor_unitario = serializers.FloatField()  # Converte para float
+
     class Meta:
         model = Orcamento
         fields = '__all__'  # Inclui todos os campos do modelo Orcamento
+
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cliente
+        fields = '__all__'
+
+class FornecedorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Fornecedor
+        fields = '__all__'
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

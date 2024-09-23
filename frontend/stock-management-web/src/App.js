@@ -1,7 +1,3 @@
-// src/App.js
-
-// src/App.js
-
 import React from 'react';
 import './App.css';  // Estilos específicos para o login (opcional)
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -11,6 +7,10 @@ import ProdutoForm from './components/ProdutoForm';  // Importa o formulário de
 import OrcamentoList from './components/OrcamentoList';  // Importa o formulário de adicionar produtos
 import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import ClienteForm from './components/ClienteForm';
+import ClienteList from './components/ClienteList';
+import ForncedorForm from './components/FornecedorForm';
+import FornecedorList from './components/FornecedorList';
 
 
 function App() {
@@ -28,6 +28,10 @@ function App() {
           <Route path="/produtos" element={<PrivateRoute component={ProdutoList} />} />
           <Route path="/orcamentos" element={<PrivateRoute component={OrcamentoList} />} />
           <Route path="/produtos/novo" element={<PrivateRoute component={ProdutoForm} />} />  {/* Adiciona a rota para o formulário de produto */}
+          <Route path="/clientes/novo" element={<ClienteForm component={ClienteForm}/>} />
+          <Route path="/clientes" element={<ClienteList component={ClienteList}/>} />
+          <Route path="/fornecedores/novo" element={<ForncedorForm component={ForncedorForm}/>} />
+          <Route path="/fornecedores" element={<FornecedorList component={FornecedorList}/>} />
           
         </Routes>
       </div>

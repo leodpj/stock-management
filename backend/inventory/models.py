@@ -62,7 +62,30 @@ class Orcamento(models.Model):
         default='Pendente'
     )
 
-
-
     def __str__(self):
         return f"Orçamento #{self.id} para {self.cliente}"
+
+
+class Cliente(models.Model):
+    nome = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
+    telefone = models.CharField(max_length=20, blank=True, null=True)
+    endereco = models.CharField(max_length=255, blank=True, null=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome
+
+from django.db import models
+
+class Fornecedor(models.Model):
+    razao_social = models.CharField(max_length=100)
+    nome_fantasia = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
+    telefone = models.CharField(max_length=20, blank=True, null=True)
+    cnpj = models.CharField(max_length=14, unique=True)
+    endereco = models.CharField(max_length=255, blank=True, null=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome_fantasia
