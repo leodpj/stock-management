@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor
-from .forms import ProdutoForm, EntradaForm, SaidaForm, PedidoForm, OrcamentoForm, ClienteForm
+from .forms import ProdutoForm, EntradaForm, SaidaForm, PedidoForm, OrcamentoForm, ClienteForm, FornecedorForm
 from rest_framework import viewsets
 from .serializers import ProdutoSerializer, EntradaSerializer, SaidaSerializer, PedidoSerializer, CustomTokenObtainPairSerializer, OrcamentoSerializer, ClienteSerializer, FornecedorSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -118,19 +118,31 @@ def criar_orcamento(request):
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
-    return render(request, 'inventory/clientes_list.html', {'orcamentos': clientes})
+    return render(request, 'inventory/clientes_list.html', {'cliente': clientes})
 
 def criar_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_orcamentos')
+            return redirect('listar_clientes')
     else:
         form = ClienteForm()
     return render(request, 'inventory/cliente_form.html', {'form': form})
 
+def listar_fornecedores(request):
+    fornecedores = Fornecedor.objects.all()
+    return render(request, 'inventory/fornecedor_list.html', {'fornecedores': fornecedores})
 
+def criar_fornecedor(request):
+    if request.method == 'POST':
+        form = FornecedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_fornecedores')
+    else:
+        form = FornecedorForm()
+    return render(request, 'inventory/fornecedor_form.html', {'form': form})
 
 # inventory/views.py
 

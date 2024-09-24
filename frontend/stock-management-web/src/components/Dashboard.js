@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBox, FaArrowRight, FaArrowLeft, FaClipboardList, FaFileInvoiceDollar, FaUsers } from 'react-icons/fa'; // Importando os ícones
+import { FaBox, FaArrowRight, FaArrowLeft, FaClipboardList, FaFileInvoiceDollar, FaUsers, FaTruck } from 'react-icons/fa'; // Importando os ícones
 import './Dashboard.css';  // Estilos específicos para o login (opcional)
 
 function Dashboard() {
@@ -61,6 +61,11 @@ return (
             <li>
               <a href="/clientes">
                 <FaUsers size={20} /> Gerenciar Cliente
+              </a>
+            </li>
+            <li>
+              <a href="/fornecedores">
+                <FaTruck size={20} /> Gerenciar Fornecedor
               </a>
             </li>
         </ul>

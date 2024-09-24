@@ -13,15 +13,25 @@ const ForncedorForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const fornecedorData = {
+      razao_social,
+      nome_fantasia,
+	  email,
+      telefone,
+	  cnpj,
+      endereco,
+    };
+    
     try {
-      await api.post('/fornecedor/', {
-        razao_social,
-        nome_fantasia,
-        email,
-        telefone,
-        cnpj,
-        endereco,
+      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      const response = await api.post('/fornecedores/', fornecedorData, {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          'Content-Type': 'application/json',
+        },
       });
+
       alert('Fornecedor cadastrado com sucesso!');
       setRazao_social('');
       setNome_fantasia('');
@@ -57,7 +67,7 @@ const ForncedorForm = () => {
         </div>
         <div>
           <label>CNPJ:</label>
-          <input type="text" value={telefone} onChange={(e) => setCnpj(e.target.value)} />
+          <input type="text" value={cnpj} onChange={(e) => setCnpj(e.target.value)} />
         </div>
         <div>
           <label>Endereço:</label>

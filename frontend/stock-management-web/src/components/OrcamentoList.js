@@ -1,6 +1,6 @@
 // src/components/OrcamentoList.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcional)
 import api from '../services/api';
 
@@ -15,6 +15,7 @@ function OrcamentoList() {
   const [status, setStatus] = useState('Pendente');  // Valor padrão para status
   const [message, setMessage] = useState('');
 
+  const printRef = useRef();  
 
   useEffect(() => {
     const fetchOrcamentos = async () => {
@@ -99,23 +100,13 @@ function OrcamentoList() {
   };
 
 // Função para imprimir o orçamento
-const handlePrint = (orcamento) => {
-  // Imprime o orçamento abrindo uma nova janela
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <html>
-    <head>
-      <title>Imprimir Orçamento</title>
-    </head>
-    <body>
-      <h1>Orçamento para ${orcamento.cliente}</h1>
-      <p>Descrição: ${orcamento.especificacao}</p>
-      <p>Quantidade: ${orcamento.quantidade}</p>
-      <p>Valor Unitário: R$ ${orcamento.valor_unitario.toFixed(2)}</p>
-      <p>Valor Total: R$ ${orcamento.valor_total.toFixed(2)}</p>
-    </body>
-    </html>
-  `);
+const handlePrint = () => {
+  const printContents = printRef.current.innerHTML;
+  const printWindow = window.open('', '', 'height=600,width=800');
+  printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(printContents);
+  printWindow.document.write('</body></html>');
   printWindow.document.close();
   printWindow.focus();
   printWindow.print();
@@ -234,7 +225,14 @@ const handleEmail = async (orcamento) => {
             <p>Nenhum orçamento encontrado.</p>
           )}
         </ul>
+        <div ref={printRef}>
+        {/* Conteúdo do orçamento que deseja imprimir */}
+        <h1>Orçamento</h1>
+        <p>Detalhes do orçamento...</p>
+      </div>
+      <button onClick={handlePrint}>Imprimir</button>
     </div>
+    
   );
 }
 

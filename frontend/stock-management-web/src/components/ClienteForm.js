@@ -11,13 +11,27 @@ const ClienteForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+
+
+    const clienteData = {
+      nome,
+      email,
+      telefone,
+      endereco,
+    };
+
+    
     try {
-      await api.post('/clientes/', {
-        nome,
-        email,
-        telefone,
-        endereco,
+      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      const response = await api.post('/clientes/', clienteData, {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          'Content-Type': 'application/json',
+        },
       });
+
+      
       alert('Cliente cadastrado com sucesso!');
       setNome('');
       setEmail('');
@@ -29,7 +43,7 @@ const ClienteForm = () => {
   };
 
   return (
-    <div>
+    <div className="orcamento-container"> 
       <h2>Cadastrar Cliente</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
