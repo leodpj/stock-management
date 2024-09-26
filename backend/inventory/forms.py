@@ -25,7 +25,7 @@ class PedidoForm(forms.ModelForm):
 class OrcamentoForm(forms.ModelForm):
     class Meta:
         model = Orcamento
-        fields = ['cliente', 'validade', 'especificacao', 'metros_quadrados', 'quantidade', 'valor_unitario', 'valor_total', 'status']
+        fields = ['cliente', 'validade', 'descricao', 'especificacao', 'quantidade','valor_unitario', 'valor_total', 'status']
 
 
 class ClienteForm(forms.ModelForm):

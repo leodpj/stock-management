@@ -51,19 +51,31 @@ class Orcamento(models.Model):
     cliente = models.CharField(max_length=100)
     data_orcamento = models.DateField(auto_now_add=True)  # Este campo é preenchido automaticamente
     validade = models.DateField()
-    especificacao = models.TextField(blank=True, null=True)
-    metros_quadrados = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    descricao = models.TextField(blank=True, null=True)
+    especificacao = models.CharField(
+        max_length=20,
+        choices=[('UND', 'UND'), ('M²', 'M²')],
+        default='UND'
+    )
     quantidade = models.PositiveIntegerField(blank=True, null=True)
     valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     status = models.CharField(
-        max_length=20,
-        choices=[('Aprovado', 'Aprovado'), ('Pendente', 'Pendente'), ('Rejeitado', 'Rejeitado')],
-        default='Pendente'
+    max_length = 20,
+    choices = [('Aprovado', 'Aprovado'), ('Pendente', 'Pendente'), ('Rejeitado', 'Rejeitado')],
+    default = 'Pendente'
     )
 
+    def save(self, *args, **kwargs):
+        # Se metros_quadrados e valor_unitario existirem, calcular o valor total
+        if self.quantidade is not None and self.valor_unitario is not None:
+            self.valor_total = self.quantidade * self.valor_unitario
+        else:
+            self.valor_total = None  # Se faltar algum valor, o total fica indefinido
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Orçamento #{self.id} para {self.cliente}"
+        return f'Orçamento de {self.cliente} - {self.status}'
 
 
 class Cliente(models.Model):

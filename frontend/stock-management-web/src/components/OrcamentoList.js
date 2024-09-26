@@ -8,8 +8,8 @@ function OrcamentoList() {
   const [orcamentos, setOrcamentos] = useState([]);  // Inicializar com um array vazio
   const [cliente, setCliente] = useState('');
   const [validade, setValidade] = useState('');
-  const [especificacao, setEspecificacao] = useState('');
-  const [metrosQuadrados, setMetrosQuadrados] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [especificacao, setEspecificacao] = useState('UND');
   const [quantidade, setQuantidade] = useState('');
   const [valorUnitario, setValorUnitario] = useState('');
   const [status, setStatus] = useState('Pendente');  // Valor padrão para status
@@ -39,10 +39,11 @@ function OrcamentoList() {
   }, []);
 
 
-  // Função para calcular o valor total automaticamente
-  const calcularValorTotal = () => {
-    return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
-  };
+    // Função para calcular o valor total automaticamente
+    const calcularValorTotal = () => {
+      return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
+    };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,8 +51,8 @@ function OrcamentoList() {
     const novoOrcamento = {
       cliente,  // String
       validade,  // Data no formato "YYYY-MM-DD"
-      especificacao,  // String
-      metros_quadrados: parseFloat(metrosQuadrados) || null,  // Decimal
+      descricao, // String
+      especificacao,  // String: "UND", "M²"
       quantidade: parseInt(quantidade, 10) || null,  // Inteiro
       valor_unitario: parseFloat(valorUnitario) || null,  // Decimal
       valor_total: calcularValorTotal(),  // Decimal calculado
@@ -70,8 +71,8 @@ function OrcamentoList() {
       setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos com o novo
       setCliente('');
       setValidade('');
-      setEspecificacao('');
-      setMetrosQuadrados('');
+      setDescricao('');
+      setEspecificacao('UND');
       setQuantidade('');
       setValorUnitario('');
       setStatus('Pendente');
@@ -113,6 +114,7 @@ function OrcamentoList() {
     printWindow.print();
     printWindow.close();
   };
+  
 
   // Função para enviar o orçamento por email
   const handleEmail = async (orcamento) => {
@@ -163,23 +165,24 @@ function OrcamentoList() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="especificacao">Especificação:</label>
+          <label htmlFor="descricao">Descrição:</label>
           <textarea
             type="text"
-            id="especificacao"
-            value={especificacao}
-            onChange={(e) => setEspecificacao(e.target.value)}
+            id="descricao"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="metros_quadrados">Metros Quadrados:</label>
-          <input
-            type="number"
-            id="metros_quadrados"
-            value={metrosQuadrados}
-            onChange={(e) => setMetrosQuadrados(e.target.value)}
-            step="0.01"
-          />
+          <label htmlFor="especificacao">Especificacao:</label>
+          <select
+            id="status"
+            value={especificacao}
+            onChange={(e) => setEspecificacao(e.target.value)}
+          >
+            <option value="UND">UND</option>
+            <option value="M²">M²</option>
+            </select>
         </div>
         <div className="form-group">
           <label htmlFor="quantidade">Quantidade:</label>
@@ -220,7 +223,7 @@ function OrcamentoList() {
         {Array.isArray(orcamentos) && orcamentos.length > 0 ? (
           orcamentos.map((orcamento) => (
             <li key={orcamento.id}>
-              {orcamento.cliente} - R$ {typeof orcamento.valor_total === 'number' ? orcamento.valor_total.toFixed(2) : '0.00'} - {orcamento.status}
+              {orcamento.cliente} - R$ {typeof orcamento.valor_total === 'number' ? orcamento.valor_total.toFixed(2) : ''} {orcamento.valor_total}  - {orcamento.status}
               <button onClick={() => handlePrint(orcamento)}>Imprimir</button>
               <button onClick={() => handleEmail(orcamento)}>Enviar por Email</button>
               <button onClick={() => handleDelete(orcamento.id)}>Excluir</button>

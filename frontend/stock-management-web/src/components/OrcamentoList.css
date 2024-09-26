@@ -73,6 +73,13 @@
     background-color: #007bff; /* Tom mais escuro no hover */
   }
   
+ 
+  #descricao{
+    width: 100%;
+    height: 150px;
+  }
+
+
   #especificacao{
     width: 100%;
     height: 150px;
