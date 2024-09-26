@@ -102,27 +102,20 @@ function OrcamentoList() {
   };
 
   // Função para imprimir o orçamento
-const handlePrint = (orcamento) => {
-  const printContents = `
-    <h1>Orçamento de ${orcamento.cliente}</h1>
-    <p>Descrição: ${orcamento.descricao}</p>
-    <p>Especificação: ${orcamento.especificacao}</p>
-    <p>Quantidade: ${orcamento.quantidade}</p>
-    <p>Valor Unitário: R$ ${orcamento.valor_unitario.toFixed(2)}</p>
-    <p>Valor Total: R$ ${orcamento.quantidade * orcamento.valor_unitario.toFixed(2)}</p>
-    <p>Status: ${orcamento.status}</p>
-  `;
-  
-  const printWindow = window.open('', '', 'height=600,width=800');
-  printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
-  printWindow.document.write('</head><body>');
-  printWindow.document.write(printContents);
-  printWindow.document.write('</body></html>');
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
-};
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
+    printWindow.document.write('<style>@media print { body { font-family: Arial, sans-serif; } .no-print { display: none; } }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
+
   
 
   // Função para enviar o orçamento por email
@@ -242,12 +235,67 @@ const handlePrint = (orcamento) => {
           <p>Nenhum orçamento encontrado.</p>
         )}
       </ul>
-      <div ref={printRef}>
-        {/* Conteúdo do orçamento que deseja imprimir */}
-        <h1>Orçamento</h1>
-        <p>Detalhes do orçamento...</p>
+      <div ref={printRef} className="print-section">
+        {/* Cabeçalho para Impressão */}
+        <header className="print-header">
+          <img src="/divneves.png" alt="Logo do Sistema" className="logo_divi" />
+          <p>Endereço: Avenida Radial B, 21, - Camaçari, Bahia</p>
+          <p>Telefone: (71) 2136-3828 | Email: contato@divineeves.com</p>
+          <hr />
+        </header>
+
+        {/* Conteúdo do Orçamento */}
+        <main className="print-content">
+          <h3>Orçamento</h3>
+          <p><strong>Cliente:</strong> Fulano de Tal</p>
+          <p><strong>Data do Orçamento:</strong> 01/09/2024</p>
+          <p><strong>Validade:</strong> 30/09/2024</p>
+
+          {/* Exemplo de Tabela de Produtos/Serviços */}
+          <table className="orcamento-table">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Quantidade (m²)</th>
+                <th>Valor Unitário (R$)</th>
+                <th>Valor Total (R$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Serviço de Pintura</td>
+                <td>50</td>
+                <td>20,00</td>
+                <td>1000,00</td>
+              </tr>
+              <tr>
+                <td>Instalação de Janelas de vidro</td>
+                <td>30</td>
+                <td>35,00</td>
+                <td>1050,00</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="3"><strong>Total</strong></td>
+                <td><strong>R$ 2050,00</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </main>
+
+        {/* Rodapé para Impressão */}
+        <footer className="print-footer">
+          <hr />
+          <p>DIVINEVES VIDRÇARIA COMÉRCIO DE VIDROS SERVIÇOS E CONSTRUÇÕES LTDA-ME
+          - CNPJ: CNPJ:07.757.322/0001-29 
+          </p>
+          <p>Rua Exemplo, 123 - Cidade, Estado - CEP: 12345-678</p>
+          <p>Telefone: (71) 2136-3828 / 99629-7105 | Email: contato@divineves.com</p>
+        </footer>
       </div>
-      <button onClick={handlePrint}>Imprimir</button>
+
+      <button onClick={handlePrint} className="no-print">Imprimir</button>
     </div>
 
   );

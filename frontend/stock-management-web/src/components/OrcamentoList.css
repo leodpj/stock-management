@@ -1,5 +1,6 @@
 /* src/components/OrcamentoList.css */
 
+
 .orcamento-container {
     max-width: 800px;
     margin: 50px auto;
@@ -85,3 +86,86 @@
     height: 150px;
   }
 
+/* OrcamentoList.css */
+
+
+.print-section {
+  padding: 20px;
+  border: 1px solid #000;
+}
+
+/* Cabeçalho */
+.print-header h2 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.print-header p {
+  margin: 5px 0;
+}
+
+.print-header .logo_divi {
+  width: 50%;
+  position: relative;
+  right: 26%;
+}
+
+/* Corpo do orçamento */
+.orcamento-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.orcamento-table th, .orcamento-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}
+
+.orcamento-table th {
+  background-color: #f4f4f4;
+}
+
+.orcamento-table tfoot td {
+  font-weight: bold;
+  background-color: #f4f4f4;
+}
+
+/* Rodapé */
+.print-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.print-footer p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Estilos de impressão */
+@media print {
+  .no-print {
+    display: none; /* Oculta botões durante a impressão */
+  }
+
+  .orcamento-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-section {
+    border: none;
+  }
+
+  .print-header, .print-footer {
+    page-break-after: avoid;
+  }
+
+  .print-header {
+    text-align: center;
+  }
+
+
+}
