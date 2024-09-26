@@ -23,15 +23,24 @@ function ProdutoForm() {
 
     try {
       const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      
+      // Faz a requisição POST para a API com o token no cabeçalho
       const response = await api.post('/produtos/', produtoData, {
         headers: {
           Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
           'Content-Type': 'application/json',
         },
       });
-
+    
+      // Caso a requisição tenha sucesso, você pode usar a resposta da API
+      console.log('Produto criado com sucesso:', response.data);
+    
+      // Caso queira fazer algo com o dado retornado, como redirecionar
+      // ou mostrar uma mensagem de sucesso ao usuário:
+      // Por exemplo: 
+      
       // Exibe uma mensagem de sucesso e limpa o formulário
-      setMessage('Produto adicionado com sucesso!');
+      alert('Produto cadastrado com sucesso!');
       setNome('');
       setDescricao('');
       setPreco('');

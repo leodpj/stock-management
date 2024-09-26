@@ -32,6 +32,9 @@ const ForncedorForm = () => {
         },
       });
 
+       // Caso a requisição tenha sucesso, você pode usar a resposta da API
+      console.log('Produto criado com sucesso:', response.data);
+
       alert('Fornecedor cadastrado com sucesso!');
       setRazao_social('');
       setNome_fantasia('');

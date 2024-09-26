@@ -22,6 +22,7 @@ const ClienteForm = () => {
     };
 
     
+    
     try {
       const token = localStorage.getItem('access_token');  // Recupera o token JWT
       const response = await api.post('/clientes/', clienteData, {
@@ -30,7 +31,8 @@ const ClienteForm = () => {
           'Content-Type': 'application/json',
         },
       });
-
+      // Caso a requisição tenha sucesso, você pode usar a resposta da API
+      console.log('Produto criado com sucesso:', response.data);
       
       alert('Cliente cadastrado com sucesso!');
       setNome('');

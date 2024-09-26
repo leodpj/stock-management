@@ -15,7 +15,7 @@ function OrcamentoList() {
   const [status, setStatus] = useState('Pendente');  // Valor padrão para status
   const [message, setMessage] = useState('');
 
-  const printRef = useRef();  
+  const printRef = useRef();
 
   useEffect(() => {
     const fetchOrcamentos = async () => {
@@ -26,7 +26,7 @@ function OrcamentoList() {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         console.log('Dados recebidos:', response.data);  // Verificar os dados recebidos
         setOrcamentos(response.data);  // Verifica se está atribuindo um array
       } catch (error) {
@@ -34,10 +34,10 @@ function OrcamentoList() {
         console.error(error);
       }
     };
-  
+
     fetchOrcamentos();
   }, []);
-  
+
 
   // Função para calcular o valor total automaticamente
   const calcularValorTotal = () => {
@@ -46,7 +46,7 @@ function OrcamentoList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const novoOrcamento = {
       cliente,  // String
       validade,  // Data no formato "YYYY-MM-DD"
@@ -57,7 +57,7 @@ function OrcamentoList() {
       valor_total: calcularValorTotal(),  // Decimal calculado
       status,  // String: "Pendente", "Aprovado" ou "Rejeitado"
     };
-  
+
     try {
       const token = localStorage.getItem('access_token');  // Recupera o token JWT
       const response = await api.post('/orcamentos/', novoOrcamento, {
@@ -66,7 +66,7 @@ function OrcamentoList() {
           'Content-Type': 'application/json',
         },
       });
-  
+
       setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos com o novo
       setCliente('');
       setValidade('');
@@ -81,7 +81,7 @@ function OrcamentoList() {
       console.error(error.response.data);  // Verifica a mensagem de erro no console
     }
   };
-  
+
   // Função para excluir um orçamento
   const handleDelete = async (id) => {
     try {
@@ -92,46 +92,50 @@ function OrcamentoList() {
         },
       });
 
-      setOrcamentos(orcamentos.filter(orcamento => orcamento.id !== id));  // Remove o orçamento da lista
-      setMessage('Orçamento excluído com sucesso!');
+      // Atualiza a lista de orçamentos após a exclusão
+      setOrcamentos(orcamentos.filter((orcamento) => orcamento.id !== id));
     } catch (error) {
-      setMessage('Erro ao excluir o orçamento.');
+      console.error('Erro ao excluir orçamento:', error);
+      alert('Falha ao excluir o orçamento. Tente novamente.');
     }
   };
 
-// Função para imprimir o orçamento
-const handlePrint = () => {
-  const printContents = printRef.current.innerHTML;
-  const printWindow = window.open('', '', 'height=600,width=800');
-  printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
-  printWindow.document.write('</head><body>');
-  printWindow.document.write(printContents);
-  printWindow.document.write('</body></html>');
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
-};
+  // Função para imprimir o orçamento
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
 
-// Função para enviar o orçamento por email
-const handleEmail = async (orcamento) => {
-  try {
-    const token = localStorage.getItem('access_token');  // Recupera o token JWT
-    const response = await api.post(`/orcamentos/${orcamento.id}/enviar-email/`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    setMessage(`Orçamento enviado por email para ${orcamento.cliente}.`);
-  } catch (error) {
-    setMessage('Erro ao enviar o orçamento por email.');
-  }
-};
+  // Função para enviar o orçamento por email
+  const handleEmail = async (orcamento) => {
+    try {
+      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      const response = await api.post(`/orcamentos/${orcamento.id}/enviar-email/`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Caso a requisição tenha sucesso, você pode usar a resposta da API
+      console.log('Produto criado com sucesso:', response.data);
+
+      setMessage(`Orçamento enviado por email para ${orcamento.cliente}.`);
+    } catch (error) {
+      setMessage('Erro ao enviar o orçamento por email.');
+    }
+  };
 
 
-
-    return (
+  return (
     <div className="orcamento-container">
       <h1>Gerenciar Orçamentos</h1>
       {message && <p>{message}</p>}
@@ -212,27 +216,28 @@ const handleEmail = async (orcamento) => {
       </form>
 
       {/* Lista de orçamentos */}
-        <ul>
-          {Array.isArray(orcamentos) && orcamentos.length > 0 ? (
-            orcamentos.map((orcamento) => (
-              <li key={orcamento.id}>
-                {orcamento.cliente} - R$ {typeof orcamento.valor_total === 'number' ? orcamento.valor_total.toFixed(2) : '0.00'} - {orcamento.status}
-                <button onClick={() => handlePrint(orcamento)}>Imprimir</button>
-                <button onClick={() => handleEmail(orcamento)}>Enviar por Email</button>
-              </li>
-            ))
-          ) : (
-            <p>Nenhum orçamento encontrado.</p>
-          )}
-        </ul>
-        <div ref={printRef}>
+      <ul>
+        {Array.isArray(orcamentos) && orcamentos.length > 0 ? (
+          orcamentos.map((orcamento) => (
+            <li key={orcamento.id}>
+              {orcamento.cliente} - R$ {typeof orcamento.valor_total === 'number' ? orcamento.valor_total.toFixed(2) : '0.00'} - {orcamento.status}
+              <button onClick={() => handlePrint(orcamento)}>Imprimir</button>
+              <button onClick={() => handleEmail(orcamento)}>Enviar por Email</button>
+              <button onClick={() => handleDelete(orcamento.id)}>Excluir</button>
+            </li>
+          ))
+        ) : (
+          <p>Nenhum orçamento encontrado.</p>
+        )}
+      </ul>
+      <div ref={printRef}>
         {/* Conteúdo do orçamento que deseja imprimir */}
         <h1>Orçamento</h1>
         <p>Detalhes do orçamento...</p>
       </div>
       <button onClick={handlePrint}>Imprimir</button>
     </div>
-    
+
   );
 }
 
