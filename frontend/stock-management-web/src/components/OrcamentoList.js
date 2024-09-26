@@ -102,18 +102,27 @@ function OrcamentoList() {
   };
 
   // Função para imprimir o orçamento
-  const handlePrint = () => {
-    const printContents = printRef.current.innerHTML;
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  };
+const handlePrint = (orcamento) => {
+  const printContents = `
+    <h1>Orçamento de ${orcamento.cliente}</h1>
+    <p>Descrição: ${orcamento.descricao}</p>
+    <p>Especificação: ${orcamento.especificacao}</p>
+    <p>Quantidade: ${orcamento.quantidade}</p>
+    <p>Valor Unitário: R$ ${orcamento.valor_unitario.toFixed(2)}</p>
+    <p>Valor Total: R$ ${orcamento.quantidade * orcamento.valor_unitario.toFixed(2)}</p>
+    <p>Status: ${orcamento.status}</p>
+  `;
+  
+  const printWindow = window.open('', '', 'height=600,width=800');
+  printWindow.document.write('<html><head><title>Imprimir Orçamento</title>');
+  printWindow.document.write('</head><body>');
+  printWindow.document.write(printContents);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.close();
+};
   
 
   // Função para enviar o orçamento por email
