@@ -9,7 +9,7 @@ import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import ClienteForm from './components/ClienteForm';
 import ClienteList from './components/ClienteList';
-import ForncedorForm from './components/FornecedorForm';
+import FornecedorForm from './components/FornecedorForm';
 import FornecedorList from './components/FornecedorList';
 
 
@@ -30,8 +30,10 @@ function App() {
           <Route path="/produtos/novo" element={<PrivateRoute component={ProdutoForm} />} />  {/* Adiciona a rota para o formulário de produto */}
           <Route path="/clientes/novo" element={<ClienteForm component={ClienteForm}/>} />
           <Route path="/clientes" element={<ClienteList component={ClienteList}/>} />
-          <Route path="/fornecedores/novo" element={<ForncedorForm component={ForncedorForm}/>} />
+          <Route path="/clientes/editar/:id" element={<ClienteForm component={ClienteList} />} />
+          <Route path="/fornecedores/novo" element={<FornecedorForm component={FornecedorForm}/>} />
           <Route path="/fornecedores" element={<FornecedorList component={FornecedorList}/>} />
+          <Route path="/fornecedores/editar/:id" element={<FornecedorForm component={FornecedorList} />} />
           
         </Routes>
       </div>
