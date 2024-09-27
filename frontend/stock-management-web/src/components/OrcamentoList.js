@@ -6,13 +6,14 @@ import api from '../services/api';
 
 function OrcamentoList() {
   const [orcamentos, setOrcamentos] = useState([]);  // Inicializar com um array vazio
+  const [itens, setItens] = useState([]);  // Para armazenar os itens adicionados
   const [cliente, setCliente] = useState('');
   const [validade, setValidade] = useState('');
   const [descricao, setDescricao] = useState('');
   const [especificacao, setEspecificacao] = useState('UND');
   const [quantidade, setQuantidade] = useState('');
   const [valorUnitario, setValorUnitario] = useState('');
-  const [status, setStatus] = useState('Pendente');  // Valor padrão para status
+  const [status, setStatus] = useState('Pendente');
   const [message, setMessage] = useState('');
 
   const printRef = useRef();
@@ -38,50 +39,63 @@ function OrcamentoList() {
     fetchOrcamentos();
   }, []);
 
+// Função para adcionar orçamento
+  const adicionarItem = () => {
+    const novoItem = {
+      descricao,  // Exemplo: "Serviço de Pintura"
+      especificacao,  // Exemplo: "M²"
+      quantidade: parseInt(quantidade, 10) || 0,
+      valor_unitario: parseFloat(valorUnitario) || 0,
+      valor_total: parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0),  // Calcula o valor total do item
+    };
+  
+    setItens([...itens, novoItem]);  // Adiciona o novo item à lista
+    setDescricao('');  // Limpa o formulário de itens
+    setEspecificacao('UND');
+    setQuantidade('');
+    setValorUnitario('');
+  };
 
+
+
+  
     // Função para calcular o valor total automaticamente
     const calcularValorTotal = () => {
       return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
     };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const novoOrcamento = {
-      cliente,  // String
-      validade,  // Data no formato "YYYY-MM-DD"
-      descricao, // String
-      especificacao,  // String: "UND", "M²"
-      quantidade: parseInt(quantidade, 10) || null,  // Inteiro
-      valor_unitario: parseFloat(valorUnitario) || null,  // Decimal
-      valor_total: calcularValorTotal(),  // Decimal calculado
-      status,  // String: "Pendente", "Aprovado" ou "Rejeitado"
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+    
+      const novoOrcamento = {
+        cliente,  // String
+        validade,  // Data no formato "YYYY-MM-DD"
+        status,  // String: "Pendente", "Aprovado" ou "Rejeitado"
+        itens,  // Lista de itens com descrição, quantidade, valor_unitario e valor_total
+      };
+    
+      try {
+        const token = localStorage.getItem('access_token');  // Recupera o token JWT
+        const response = await api.post('/orcamentos/', novoOrcamento, {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos com o novo
+        setCliente('');
+        setValidade('');
+        setStatus('Pendente');
+        setItens([]);  // Limpa a lista de itens após o envio
+        setMessage('Orçamento adicionado com sucesso!');
+      } catch (error) {
+        setMessage('Erro ao adicionar o orçamento.');
+        console.error(error.response.data);  // Verifica a mensagem de erro no console
+      }
     };
-
-    try {
-      const token = localStorage.getItem('access_token');  // Recupera o token JWT
-      const response = await api.post('/orcamentos/', novoOrcamento, {
-        headers: {
-          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
-          'Content-Type': 'application/json',
-        },
-      });
-
-      setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos com o novo
-      setCliente('');
-      setValidade('');
-      setDescricao('');
-      setEspecificacao('UND');
-      setQuantidade('');
-      setValorUnitario('');
-      setStatus('Pendente');
-      setMessage('Orçamento adicionado com sucesso!');
-    } catch (error) {
-      setMessage('Erro ao adicionar o orçamento.');
-      console.error(error.response.data);  // Verifica a mensagem de erro no console
-    }
-  };
+    
 
   // Função para excluir um orçamento
   const handleDelete = async (id) => {
@@ -137,6 +151,12 @@ function OrcamentoList() {
       setMessage('Erro ao enviar o orçamento por email.');
     }
   };
+
+  const removerItem = (index) => {
+    const novaLista = itens.filter((item, i) => i !== index);
+    setItens(novaLista);  // Atualiza a lista de itens
+  };
+  
 
 
   return (
@@ -217,8 +237,19 @@ function OrcamentoList() {
             <option value="Rejeitado">Rejeitado</option>
           </select>
         </div>
+        <button type="button" onClick={adicionarItem}>Adicionar Item</button><p></p>
         <button type="submit">Adicionar Orçamento</button>
       </form>
+
+      {/* Exibir a lista de itens adicionados */}
+          <ul>
+        {itens.map((item, index) => (
+          <li key={index}>
+            {item.descricao} - {item.quantidade} {item.especificacao} - R$ {item.valor_unitario} - Total: R$ {item.valor_total}
+            <button type="button" onClick={() => removerItem(index)}>Remover</button>
+          </li>
+        ))}
+      </ul>
 
       {/* Lista de orçamentos */}
       <ul>
@@ -238,7 +269,7 @@ function OrcamentoList() {
       <div ref={printRef} className="print-section">
         {/* Cabeçalho para Impressão */}
         <header className="print-header">
-          <img src="/divneves.png" alt="Logo do Sistema" className="logo_divi" />
+        <h2>DIVINEVES</h2>          
           <p>Endereço: Avenida Radial B, 21, - Camaçari, Bahia</p>
           <p>Telefone: (71) 2136-3828 | Email: contato@divineeves.com</p>
           <hr />

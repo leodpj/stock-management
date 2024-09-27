@@ -107,7 +107,8 @@
 .print-header .logo_divi {
   width: 50%;
   position: relative;
-  right: 26%;
+  align-items: center;
+  
 }
 
 /* Corpo do orçamento */
