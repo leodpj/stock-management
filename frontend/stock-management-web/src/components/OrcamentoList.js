@@ -43,9 +43,9 @@ function OrcamentoList() {
 
    
   // Função para calcular o valor total automaticamente
-  const calcularValorTotalItem  = () => {
-    return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
-  };
+ // const calcularValorTotalItem  = () => {
+  //  return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
+  //};
 
 
 // Função para adcionar orçamento

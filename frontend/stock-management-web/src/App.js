@@ -14,6 +14,7 @@ import FornecedorList from './components/FornecedorList';
 
 
 function App() {
+  const isAuthenticated = !!localStorage.getItem('access_token');  // Verifique se o token existe
   return (
     <Router>
       <div className="App">
@@ -23,8 +24,10 @@ function App() {
         <Routes>
           {/* Rota de login */}
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} />
+          {/*<Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} /> */}
           {/* Rota privada protegida */}
+          <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}/>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/produtos" element={<PrivateRoute component={ProdutoList} />} />
           <Route path="/orcamentos" element={<PrivateRoute component={OrcamentoList} />} />
           <Route path="/produtos/novo" element={<PrivateRoute component={ProdutoForm} />} />  {/* Adiciona a rota para o formulário de produto */}
