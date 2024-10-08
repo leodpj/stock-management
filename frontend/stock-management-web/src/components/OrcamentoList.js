@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcional)
 import api from '../services/api';
 
+
 function OrcamentoList() {
   const [orcamentos, setOrcamentos] = useState([]);  // Inicializar com um array vazio
   const [itens, setItens] = useState([]);  // Para armazenar os itens adicionados
@@ -39,63 +40,99 @@ function OrcamentoList() {
     fetchOrcamentos();
   }, []);
 
-// Função para adcionar orçamento
-  const adicionarItem = () => {
-    const novoItem = {
-      descricao,  // Exemplo: "Serviço de Pintura"
-      especificacao,  // Exemplo: "M²"
-      quantidade: parseInt(quantidade, 10) || 0,
-      valor_unitario: parseFloat(valorUnitario) || 0,
-      valor_total: parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0),  // Calcula o valor total do item
-    };
-  
-    setItens([...itens, novoItem]);  // Adiciona o novo item à lista
-    setDescricao('');  // Limpa o formulário de itens
-    setEspecificacao('UND');
-    setQuantidade('');
-    setValorUnitario('');
+
+   
+  // Função para calcular o valor total automaticamente
+  const calcularValorTotalItem  = () => {
+    return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
   };
 
 
+// Função para adcionar orçamento
 
+const adicionarItem = () => {
+  if (descricao && quantidade > 0 && valorUnitario > 0) {
+    const novoItem = {
+      descricao,
+      especificacao,
+      quantidade,
+      valor_unitario: parseFloat(valorUnitario),
+      valor_total: parseFloat(quantidade) * parseFloat(valorUnitario)
+    };
+
+    setItens([...itens, novoItem]);
+    
+    // Limpar os campos após adicionar o item
+    setDescricao('');
+    setEspecificacao('UND');
+    setQuantidade('');
+    setValorUnitario('');
+  } else {
+    alert("Preencha todos os campos corretamente!");
+  }
+};
+
+
+const calcularValorTotal = () => {
+  return itens.reduce((total, item) => total + parseFloat(item.valor_total), 0).toFixed(2);
+};
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
-    // Função para calcular o valor total automaticamente
-    const calcularValorTotal = () => {
-      return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
+    // Prepare the payload to send to the backend
+    const novoOrcamento = {
+      cliente,  // String
+      validade,  // Data no formato "YYYY-MM-DD"
+      descricao,  // String
+      valor_total: calcularValorTotal(),  // Decimal calculado
+      status,  // String: "Pendente", "Aprovado" ou "Rejeitado"
+      itens: itens.map((item) => ({  // Transforme a lista de itens para o formato correto
+        descricao: item.descricao,  // String
+        especificacao: item.especificacao,  // String: "UND", "M²"
+        quantidade: parseInt(item.quantidade, 10),  // Inteiro
+        valor_unitario: parseFloat(item.valor_unitario),  // Decimal
+        valor_total: parseFloat(item.valor_total),  // Decimal
+      })),
     };
-
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    
-      const novoOrcamento = {
-        cliente,  // String
-        validade,  // Data no formato "YYYY-MM-DD"
-        status,  // String: "Pendente", "Aprovado" ou "Rejeitado"
-        itens,  // Lista de itens com descrição, quantidade, valor_unitario e valor_total
-      };
-    
-      try {
-        const token = localStorage.getItem('access_token');  // Recupera o token JWT
-        const response = await api.post('/orcamentos/', novoOrcamento, {
-          headers: {
-            Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
-            'Content-Type': 'application/json',
-          },
-        });
-    
-        setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos com o novo
-        setCliente('');
-        setValidade('');
-        setStatus('Pendente');
-        setItens([]);  // Limpa a lista de itens após o envio
-        setMessage('Orçamento adicionado com sucesso!');
-      } catch (error) {
-        setMessage('Erro ao adicionar o orçamento.');
-        console.error(error.response.data);  // Verifica a mensagem de erro no console
-      }
-    };
-    
+  
+    // Validação manual para garantir que `itens` não está vazio e `valor_unitario` seja válido
+    if (itens.length === 0) {
+      setMessage("Por favor, adicione ao menos um item ao orçamento.");
+      return;  // Interrompe a execução se não houver itens
+    }
+  
+    try {
+      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+  
+      // Envia a requisição para o backend
+      const response = await api.post('/orcamentos/', novoOrcamento, {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      // Atualiza o estado do frontend
+      setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos
+      setCliente('');
+      setValidade('');
+      setDescricao('');
+      setEspecificacao('UND');
+      setQuantidade('');
+      setValorUnitario('');
+      setStatus('Pendente');
+      setItens([]);  // Limpa os itens após o envio
+      setMessage('Orçamento adicionado com sucesso!');
+    } catch (error) {
+      setMessage('Erro ao adicionar o orçamento.');
+      console.error(error.response ? error.response.data : error);
+    }
+  };
+ 
+  
+  
 
   // Função para excluir um orçamento
   const handleDelete = async (id) => {
@@ -163,7 +200,7 @@ function OrcamentoList() {
     <div className="orcamento-container">
       <h1>Gerenciar Orçamentos</h1>
       {message && <p>{message}</p>}
-
+  
       {/* Formulário para adicionar novos orçamentos */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -196,7 +233,7 @@ function OrcamentoList() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="especificacao">Especificacao:</label>
+          <label htmlFor="especificacao">Especificação:</label>
           <select
             id="status"
             value={especificacao}
@@ -204,7 +241,7 @@ function OrcamentoList() {
           >
             <option value="UND">UND</option>
             <option value="M²">M²</option>
-            </select>
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="quantidade">Quantidade:</label>
@@ -237,20 +274,23 @@ function OrcamentoList() {
             <option value="Rejeitado">Rejeitado</option>
           </select>
         </div>
+  
         <button type="button" onClick={adicionarItem}>Adicionar Item</button><p></p>
+        
+        {/* Exibir a lista de itens adicionados */}
+        <ul>
+          {itens.map((item, index) => (
+            <li key={index}>
+              {item.descricao} - {item.quantidade} {item.especificacao} - R$ {item.valor_unitario} - Total: R$ {item.valor_total}
+              <button type="button" onClick={() => removerItem(index)}>Remover</button>
+            </li>
+          ))}
+        </ul>
+  
+        {/* Botão para enviar o orçamento com os itens */}
         <button type="submit">Adicionar Orçamento</button>
       </form>
-
-      {/* Exibir a lista de itens adicionados */}
-          <ul>
-        {itens.map((item, index) => (
-          <li key={index}>
-            {item.descricao} - {item.quantidade} {item.especificacao} - R$ {item.valor_unitario} - Total: R$ {item.valor_total}
-            <button type="button" onClick={() => removerItem(index)}>Remover</button>
-          </li>
-        ))}
-      </ul>
-
+  
       {/* Lista de orçamentos */}
       <ul>
         {Array.isArray(orcamentos) && orcamentos.length > 0 ? (
@@ -266,70 +306,9 @@ function OrcamentoList() {
           <p>Nenhum orçamento encontrado.</p>
         )}
       </ul>
-      <div ref={printRef} className="print-section">
-        {/* Cabeçalho para Impressão */}
-        <header className="print-header">
-        <h2>DIVINEVES</h2>          
-          <p>Endereço: Avenida Radial B, 21, - Camaçari, Bahia</p>
-          <p>Telefone: (71) 2136-3828 | Email: contato@divineeves.com</p>
-          <hr />
-        </header>
-
-        {/* Conteúdo do Orçamento */}
-        <main className="print-content">
-          <h3>Orçamento</h3>
-          <p><strong>Cliente:</strong> Fulano de Tal</p>
-          <p><strong>Data do Orçamento:</strong> 01/09/2024</p>
-          <p><strong>Validade:</strong> 30/09/2024</p>
-
-          {/* Exemplo de Tabela de Produtos/Serviços */}
-          <table className="orcamento-table">
-            <thead>
-              <tr>
-                <th>Descrição</th>
-                <th>Quantidade (m²)</th>
-                <th>Valor Unitário (R$)</th>
-                <th>Valor Total (R$)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Serviço de Pintura</td>
-                <td>50</td>
-                <td>20,00</td>
-                <td>1000,00</td>
-              </tr>
-              <tr>
-                <td>Instalação de Janelas de vidro</td>
-                <td>30</td>
-                <td>35,00</td>
-                <td>1050,00</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="3"><strong>Total</strong></td>
-                <td><strong>R$ 2050,00</strong></td>
-              </tr>
-            </tfoot>
-          </table>
-        </main>
-
-        {/* Rodapé para Impressão */}
-        <footer className="print-footer">
-          <hr />
-          <p>DIVINEVES VIDRÇARIA COMÉRCIO DE VIDROS SERVIÇOS E CONSTRUÇÕES LTDA-ME
-          - CNPJ: CNPJ:07.757.322/0001-29 
-          </p>
-          <p>Rua Exemplo, 123 - Cidade, Estado - CEP: 12345-678</p>
-          <p>Telefone: (71) 2136-3828 / 99629-7105 | Email: contato@divineves.com</p>
-        </footer>
-      </div>
-
-      <button onClick={handlePrint} className="no-print">Imprimir</button>
     </div>
-
   );
+  
 }
 
 export default OrcamentoList;

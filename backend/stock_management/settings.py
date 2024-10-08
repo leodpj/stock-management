@@ -25,8 +25,11 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOW_ALL_ORIGINS = True  # Permite todas as origens
+# Ou especifique as origens permitidas
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Endereço do seu frontend React
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -82,8 +85,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True  # Permite todas as origens (ou configure para permitir apenas o frontend)
 
 ROOT_URLCONF = 'stock_management.urls'
 

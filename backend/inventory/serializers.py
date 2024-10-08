@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor
+from .models import Produto, Entrada, Saida, Pedido, Orcamento, Cliente, Fornecedor, Item
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -21,13 +21,35 @@ class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido
         fields = '__all__'
-
+"""
 class OrcamentoSerializer(serializers.ModelSerializer):
     valor_unitario = serializers.FloatField()  # Converte para float
 
     class Meta:
         model = Orcamento
         fields = '__all__'  # Inclui todos os campos do modelo Orcamento
+"""
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = ['descricao', 'especificacao', 'quantidade', 'valor_unitario', 'valor_total']
+
+class OrcamentoSerializer(serializers.ModelSerializer):
+    itens = ItemSerializer(many=True)  # Aninhando os itens
+
+    class Meta:
+        model = Orcamento
+        fields = ['cliente', 'validade', 'descricao', 'valor_total', 'status', 'itens']
+
+    def create(self, validated_data):
+        itens_data = validated_data.pop('itens')  # Remove os itens dos dados validados
+        orcamento = Orcamento.objects.create(**validated_data)  # Cria o orçamento
+        for item_data in itens_data:
+            Item.objects.create(orcamento=orcamento, **item_data)  # Cria os itens para o orçamento
+        return orcamento
+
+
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:

@@ -47,24 +47,30 @@ class Pedido(models.Model):
         return f"Pedido #{self.id} para {self.cliente}"
 
 
+from django.db import models
+
 class Orcamento(models.Model):
-    cliente = models.CharField(max_length=100)
-    data_orcamento = models.DateField(auto_now_add=True)  # Este campo é preenchido automaticamente
+    cliente = models.CharField(max_length=255)
     validade = models.DateField()
     descricao = models.TextField(blank=True, null=True)
-    especificacao = models.CharField(
-        max_length=20,
-        choices=[('UND', 'UND'), ('M²', 'M²')],
-        default='UND'
-    )
-    quantidade = models.PositiveIntegerField(blank=True, null=True)
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    status = models.CharField(
-    max_length = 20,
-    choices = [('Aprovado', 'Aprovado'), ('Pendente', 'Pendente'), ('Rejeitado', 'Rejeitado')],
-    default = 'Pendente'
-    )
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    status = models.CharField(max_length=20, choices=[('Pendente', 'Pendente'), ('Aprovado', 'Aprovado'), ('Rejeitado', 'Rejeitado')])
+
+    def __str__(self):
+        return f'Orçamento {self.id} - {self.cliente}'
+
+
+class Item(models.Model):
+    orcamento = models.ForeignKey(Orcamento, related_name='itens', on_delete=models.CASCADE)
+    descricao = models.CharField(max_length=255)
+    especificacao = models.CharField(max_length=20, choices=[('UND', 'UND'), ('M²', 'M²')])
+    quantidade = models.IntegerField()
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f'Item {self.descricao} do Orçamento {self.orcamento.id}'
+
 
     def save(self, *args, **kwargs):
         # Se metros_quadrados e valor_unitario existirem, calcular o valor total
@@ -88,7 +94,6 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nome
 
-from django.db import models
 
 class Fornecedor(models.Model):
     razao_social = models.CharField(max_length=100)
