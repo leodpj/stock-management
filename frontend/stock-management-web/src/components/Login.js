@@ -1,7 +1,5 @@
-// src/components/Login.js
-
 import React, { useState } from 'react';
-import './Login.css';  // Estilos específicos para o login (opcional)
+import './Login.css';  
 import api from '../services/api';  // Serviço Axios
 
 function Login() {

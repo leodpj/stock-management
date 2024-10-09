@@ -28,11 +28,11 @@ function App() {
           {/* Rota privada protegida */}
           <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}/>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/produtos" element={<PrivateRoute component={ProdutoList} />} />
-          <Route path="/orcamentos" element={<PrivateRoute component={OrcamentoList} />} />
-          <Route path="/produtos/novo" element={<PrivateRoute component={ProdutoForm} />} />  {/* Adiciona a rota para o formulário de produto */}
-          <Route path="/clientes/novo" element={<ClienteForm component={ClienteForm}/>} />
-          <Route path="/clientes" element={<ClienteList component={ClienteList}/>} />
+          <Route path="/produtos" element={<ProdutoList />} />
+          <Route path="/orcamentos" element={<OrcamentoList />} />
+          <Route path="/produtos/novo" element={<ProdutoForm />} />  {/* Adiciona a rota para o formulário de produto */}
+          <Route path="/clientes/novo" element={<ClienteForm />} />
+          <Route path="/clientes" element={<ClienteList />} />
           <Route path="/clientes/editar/:id" element={<ClienteForm component={ClienteList} />} />
           <Route path="/fornecedores/novo" element={<FornecedorForm component={FornecedorForm}/>} />
           <Route path="/fornecedores" element={<FornecedorList component={FornecedorList}/>} />

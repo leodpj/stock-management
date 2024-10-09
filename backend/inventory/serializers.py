@@ -50,7 +50,6 @@ class OrcamentoSerializer(serializers.ModelSerializer):
         return orcamento
 
 
-
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
@@ -67,11 +66,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Adicionar first_name e last_name ao token
+        # Adiciona first_name e last_name ao token
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
 
         return token
+
 """
         # Adiciona campos customizados no payload do token JWT
         token['username'] = user.username

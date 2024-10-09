@@ -1,5 +1,3 @@
-
-
 import axios from 'axios';
 
 // Configurando a instância Axios com o baseURL para a API

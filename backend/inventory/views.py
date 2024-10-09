@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
+
 class OrcamentoList(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -39,10 +40,10 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
         )
 
         return Response({'status': 'email enviado'})
-#########################
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-   serializer_class = CustomTokenObtainPairSerializer
+    serializer_class = CustomTokenObtainPairSerializer
+
 
 
 def listar_produtos(request):

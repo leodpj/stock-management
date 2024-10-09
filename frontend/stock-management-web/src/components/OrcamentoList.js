@@ -23,6 +23,12 @@ function OrcamentoList() {
     const fetchOrcamentos = async () => {
       try {
         const token = localStorage.getItem('access_token');
+
+        if (!token) {
+          setMessage("Token de autenticação não encontrado.");
+          return;
+        }
+        
         const response = await api.get('/orcamentos/', {
           headers: {
             Authorization: `Bearer ${token}`,

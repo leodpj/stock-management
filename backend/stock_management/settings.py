@@ -12,8 +12,6 @@ env = environ.Env()
 # Ler variáveis de ambiente do arquivo .env (que está na raiz do projeto)
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-$gi_9@0=*zr@y!7#7yiyy0d)ck)l%r)2-hf=v8k7c_q!_%yk%i'
@@ -44,16 +42,17 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Para JWT
+        'rest_framework.authentication.SessionAuthentication',  # Para autenticação baseada em sessão
+        'rest_framework.authentication.BasicAuthentication',  # Para autenticação básica
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+        'rest_framework.permissions.IsAuthenticated',  # Exigir autenticação para todos os endpoints
+    ),
 }
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),

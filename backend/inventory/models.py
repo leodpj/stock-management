@@ -9,7 +9,6 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
 
-
 class Entrada(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField()

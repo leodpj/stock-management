@@ -1,28 +1,30 @@
 // src/components/Dashboard.js
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBox, FaArrowRight, FaArrowLeft, FaClipboardList, FaFileInvoiceDollar, FaUsers, FaTruck } from 'react-icons/fa'; // Importando os ícones
 import './Dashboard.css';  // Estilos específicos para o login (opcional)
+import { isAuthenticated, logout } from '../services/auth';  // Importa as funções
 
 function Dashboard() {
   const firstName = localStorage.getItem('first_name');  // Recupera o primeiro nome
   const lastName = localStorage.getItem('last_name');    // Recupera o último nome
   const navigate = useNavigate();  // Hook para navegação
 
-    // Função para realizar o logoff
-    const handleLogoff = () => {
-        // Remove o token JWT e o nome do usuário do localStorage
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('first_name');
-        localStorage.removeItem('last_name');
-    
-        // Redireciona o usuário para a página de login 
-        navigate('/login');
-      };
+  // Verificação de autenticação ao carregar a página
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate('/login');  // Se não estiver autenticado, redireciona para login
+    }
+  }, [navigate]);  // useEffect dispara apenas quando o componente é montado
 
+  // Função para realizar o logoff
+  const handleLogoff = () => {
+    logout();  // Chama a função centralizada de logoff
+    navigate('/login');  // Redireciona o usuário para a página de login 
+  };
 
+  
 return (
     <div className="dashboard-container">
       <header className="dashboard-header">
