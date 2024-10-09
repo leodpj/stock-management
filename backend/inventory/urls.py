@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-from .views import CustomTokenObtainPairView
-
 
 urlpatterns = [
     path('produtos/', views.listar_produtos, name='listar_produtos'),

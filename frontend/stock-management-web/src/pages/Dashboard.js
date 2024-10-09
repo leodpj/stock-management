@@ -1,5 +1,3 @@
-// src/components/Dashboard.js
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBox, FaArrowRight, FaArrowLeft, FaClipboardList, FaFileInvoiceDollar, FaUsers, FaTruck } from 'react-icons/fa'; // Importando os ícones
@@ -22,8 +20,9 @@ function Dashboard() {
   const handleLogoff = () => {
     logout();  // Chama a função centralizada de logoff
     navigate('/login');  // Redireciona o usuário para a página de login 
+    
   };
-
+  console.log(firstName)
   
 return (
     <div className="dashboard-container">
@@ -71,7 +70,7 @@ return (
               </a>
             </li>
         </ul>
-    </nav>
+      </nav>
     </div>
   );
 }

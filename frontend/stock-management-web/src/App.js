@@ -1,16 +1,17 @@
 import React from 'react';
 import './App.css';  // Estilos específicos para o login (opcional)
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import ProdutoList from './components/ProdutoList';
-import ProdutoForm from './components/ProdutoForm';  // Importa o formulário de adicionar produtos
-import OrcamentoList from './components/OrcamentoList';  // Importa o formulário de adicionar produtos
-import Dashboard from './components/Dashboard';
-import PrivateRoute from './components/PrivateRoute';
-import ClienteForm from './components/ClienteForm';
-import ClienteList from './components/ClienteList';
-import FornecedorForm from './components/FornecedorForm';
-import FornecedorList from './components/FornecedorList';
+import Login from './pages/Login';
+import ProdutoList from './pages/ProdutoList';
+import ProdutoForm from './pages/ProdutoForm';  // Importa o formulário de adicionar produtos
+import OrcamentoList from './pages/OrcamentoList';  // Importa o formulário de adicionar produtos
+import Dashboard from './pages/Dashboard';
+import PrivateRoute from './pages/PrivateRoute';
+import ProtectedRoute from './components/ProtectedRoute';  // Importa a rota protegida
+import ClienteForm from './pages/ClienteForm';
+import ClienteList from './pages/ClienteList';
+import FornecedorForm from './pages/FornecedorForm';
+import FornecedorList from './pages/FornecedorList';
 
 
 function App() {
@@ -24,15 +25,43 @@ function App() {
         <Routes>
           {/* Rota de login */}
           <Route path="/login" element={<Login />} />
-          {/*<Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} /> */}
-          {/* Rota privada protegida */}
-          <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}/>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/produtos" element={<ProdutoList />} />
-          <Route path="/orcamentos" element={<OrcamentoList />} />
+          <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orcamentos"
+          element={
+            <ProtectedRoute>
+              <OrcamentoList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/produtos"
+          element={
+            <ProtectedRoute>
+              <ProdutoList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/clientes"
+          element={
+            <ProtectedRoute>
+              <ClienteList />
+            </ProtectedRoute>
+          }
+        />
+         {/* <Route path="/produtos" element={<ProdutoList />} />
+          <Route path="/orcamentos" element={<OrcamentoList />} />*/}
           <Route path="/produtos/novo" element={<ProdutoForm />} />  {/* Adiciona a rota para o formulário de produto */}
           <Route path="/clientes/novo" element={<ClienteForm />} />
-          <Route path="/clientes" element={<ClienteList />} />
+          {/*<Route path="/clientes" element={<ClienteList />} />*/}
           <Route path="/clientes/editar/:id" element={<ClienteForm component={ClienteList} />} />
           <Route path="/fornecedores/novo" element={<FornecedorForm component={FornecedorForm}/>} />
           <Route path="/fornecedores" element={<FornecedorList component={FornecedorList}/>} />
