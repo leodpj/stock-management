@@ -1,7 +1,5 @@
-// src/components/ProdutoForm.js
-
 import React, { useState } from 'react';
-import api from '../services/api'; // Assumindo que o arquivo api.js está configurado para fazer requisições
+import api from '../services/api';
 
 function ProdutoForm() {
   const [nome, setNome] = useState('');
@@ -13,33 +11,25 @@ function ProdutoForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Montar o objeto do produto
     const produtoData = {
       nome,
       descricao,
-      preco: parseFloat(preco),  // Converte o preço para número
-      quantidade_estoque: parseInt(quantidade, 10),  // Converte a quantidade para número
+      preco: parseFloat(preco), 
+      quantidade_estoque: parseInt(quantidade, 10),
     };
 
     try {
-      const token = localStorage.getItem('access_token');  // Recupera o token JWT
-      
-      // Faz a requisição POST para a API com o token no cabeçalho
+      const token = localStorage.getItem('access_token');      
+ 
       const response = await api.post('/produtos/', produtoData, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          Authorization: `Bearer ${token}`, 
           'Content-Type': 'application/json',
         },
-      });
-    
-      // Caso a requisição tenha sucesso, você pode usar a resposta da API
-      console.log('Produto criado com sucesso:', response.data);
-    
-      // Caso queira fazer algo com o dado retornado, como redirecionar
-      // ou mostrar uma mensagem de sucesso ao usuário:
-      // Por exemplo: 
+      });    
       
-      // Exibe uma mensagem de sucesso e limpa o formulário
+      console.log('Produto criado com sucesso:', response.data);    
+ 
       alert('Produto cadastrado com sucesso!');
       setNome('');
       setDescricao('');
@@ -53,7 +43,7 @@ function ProdutoForm() {
   return (
     <div className="produto-form-container">
       <h2>Adicionar Novo Produto</h2>
-      {message && <p>{message}</p>} {/* Exibe a mensagem de sucesso ou erro */}
+      {message && <p>{message}</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="nome">Nome do Produto:</label>

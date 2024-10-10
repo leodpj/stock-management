@@ -1,23 +1,21 @@
-// src/components/ProdutoList.js
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // Importa o hook para navegação
-import './ProdutoList.css';  // Estilos específicos para o login (opcional)
+import { useNavigate } from 'react-router-dom'; 
+import './ProdutoList.css';
 import api from '../services/api';
 
 function ProdutoList() {
   const [produtos, setProdutos] = useState([]);
   const [error, setError] = useState('');
-  const navigate = useNavigate();  // Hook para navegação
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Função para buscar os produtos da API
+ 
     const fetchProdutos = async () => {
       try {
-        const token = localStorage.getItem('access_token');  // Recupera o token JWT do localStorage
+        const token = localStorage.getItem('access_token');
         const response = await api.get('/produtos/', {
           headers: {
-            Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
         setProdutos(response.data);
@@ -26,19 +24,17 @@ function ProdutoList() {
       }
     };
 
-    fetchProdutos();  // Chama a função ao carregar o componente
+    fetchProdutos(); 
   }, []);
-
-  // Exibir uma mensagem de erro, se houver
+  
   if (error) {
     return <p>{error}</p>;
   }
 
   return (
     <div className="produto-list-container">
-      <h1>Lista de Produtos</h1>
-      
-      {/* Botão para adicionar um novo produto */}
+      <h1>Lista de Produtos</h1>      
+
       <button onClick={() => navigate('/produtos/novo')} className="novo-produto-button">
         Novo Produto
       </button>

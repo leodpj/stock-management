@@ -1,13 +1,10 @@
-// src/components/OrcamentoList.js
-
 import React, { useState, useEffect, useRef } from 'react';
-import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcional)
+import './OrcamentoList.css';
 import api from '../services/api';
 
-
 function OrcamentoList() {
-  const [orcamentos, setOrcamentos] = useState([]);  // Inicializar com um array vazio
-  const [itens, setItens] = useState([]);  // Para armazenar os itens adicionados
+  const [orcamentos, setOrcamentos] = useState([]); 
+  const [itens, setItens] = useState([]); 
   const [cliente, setCliente] = useState('');
   const [validade, setValidade] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -35,8 +32,8 @@ function OrcamentoList() {
           },
         });
 
-        console.log('Dados recebidos:', response.data);  // Verificar os dados recebidos
-        setOrcamentos(response.data);  // Verifica se está atribuindo um array
+        console.log('Dados recebidos:', response.data);
+        setOrcamentos(response.data); 
       } catch (error) {
         setMessage('Erro ao carregar os orçamentos.');
         console.error(error);
@@ -46,15 +43,6 @@ function OrcamentoList() {
     fetchOrcamentos();
   }, []);
 
-
-   
-  // Função para calcular o valor total automaticamente
- // const calcularValorTotalItem  = () => {
-  //  return parseFloat(quantidade || 0) * parseFloat(valorUnitario || 0);
-  //};
-
-
-// Função para adcionar orçamento
 
 const adicionarItem = () => {
   if (descricao && quantidade > 0 && valorUnitario > 0) {
@@ -68,7 +56,7 @@ const adicionarItem = () => {
 
     setItens([...itens, novoItem]);
     
-    // Limpar os campos após adicionar o item
+
     setDescricao('');
     setEspecificacao('UND');
     setQuantidade('');
@@ -87,7 +75,7 @@ const calcularValorTotal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Prepare the payload to send to the backend
+
     const novoOrcamento = {
       cliente,  // String
       validade,  // Data no formato "YYYY-MM-DD"
@@ -103,25 +91,25 @@ const calcularValorTotal = () => {
       })),
     };
   
-    // Validação manual para garantir que `itens` não está vazio e `valor_unitario` seja válido
+
     if (itens.length === 0) {
       setMessage("Por favor, adicione ao menos um item ao orçamento.");
-      return;  // Interrompe a execução se não houver itens
+      return; 
     }
   
     try {
-      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      const token = localStorage.getItem('access_token'); 
   
-      // Envia a requisição para o backend
+   
       const response = await api.post('/orcamentos/', novoOrcamento, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          Authorization: `Bearer ${token}`, 
           'Content-Type': 'application/json',
         },
       });
   
-      // Atualiza o estado do frontend
-      setOrcamentos([...orcamentos, response.data]);  // Atualiza a lista de orçamentos
+      
+      setOrcamentos([...orcamentos, response.data]); 
       setCliente('');
       setValidade('');
       setDescricao('');
@@ -129,7 +117,7 @@ const calcularValorTotal = () => {
       setQuantidade('');
       setValorUnitario('');
       setStatus('Pendente');
-      setItens([]);  // Limpa os itens após o envio
+      setItens([]); 
       setMessage('Orçamento adicionado com sucesso!');
     } catch (error) {
       setMessage('Erro ao adicionar o orçamento.');
@@ -138,9 +126,6 @@ const calcularValorTotal = () => {
   };
  
   
-  
-
-  // Função para excluir um orçamento
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('access_token');  // Recupera o token JWT
@@ -172,8 +157,6 @@ const calcularValorTotal = () => {
     printWindow.print();
     printWindow.close();
   };
-
-  
 
   // Função para enviar o orçamento por email
   const handleEmail = async (orcamento) => {

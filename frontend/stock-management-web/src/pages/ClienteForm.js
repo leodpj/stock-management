@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcional)
+import './OrcamentoList.css';
 import api from '../services/api';
 
 const ClienteForm = () => {
@@ -12,17 +12,13 @@ const ClienteForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-
-
     const clienteData = {
       nome,
       email,
       telefone,
       endereco,
     };
-
-    
-    
+      
     try {
       const token = localStorage.getItem('access_token');  // Recupera o token JWT
       const response = await api.post('/clientes/', clienteData, {

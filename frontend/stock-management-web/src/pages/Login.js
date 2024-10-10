@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';  
-import api from '../services/api';  // Serviço Axios
+import api from '../services/api'; 
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -19,18 +19,16 @@ function Login() {
       // Armazena o token JWT e o nome do usuário no localStorage
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
-      localStorage.setItem('first_name', response.data.first_name);  // Armazena o first_name
-      localStorage.setItem('last_name', response.data.last_name);    // Armazena o last_name
+      localStorage.setItem('first_name', response.data.first_name);  
+      localStorage.setItem('last_name', response.data.last_name);   
 
       
-      // Redireciona para a página inicial
       window.location.href = '/dashboard';
     } catch (error) {
       setError('Nome de usuário ou senha inválidos');
     }
     
   };
-
 
   return (
     <div className="login-container">

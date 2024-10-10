@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './OrcamentoList.css';  // Estilos específicos para o orçamento (opcional)
+import './OrcamentoList.css'; 
 import api from '../services/api';
 
 const ForncedorForm = () => {
@@ -24,15 +24,15 @@ const ForncedorForm = () => {
     };
     
     try {
-      const token = localStorage.getItem('access_token');  // Recupera o token JWT
+      const token = localStorage.getItem('access_token'); 
       const response = await api.post('/fornecedores/', fornecedorData, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Envia o token no cabeçalho
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
-       // Caso a requisição tenha sucesso, você pode usar a resposta da API
+    
       console.log('Produto criado com sucesso:', response.data);
 
       alert('Fornecedor cadastrado com sucesso!');
